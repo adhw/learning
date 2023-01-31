@@ -74,7 +74,11 @@ git如何使用？
 
 #### 二. 独立使用Git时的常用场景
 ##### 1. 怎么删除不需要的分支
+
+- git branch -d branch_name:使用-d在删除前git会判断该分支上的开发功能是否被merge到其它分支，如果没有，不能删除。如果merge到了其他分支，但之后又在其上面进行了开发，使用-d还是不能删除。使用-D表示的是强制删除。
 ##### 2. 怎么修改最新的commit
+
+- git commit --amend:代替（或者说修改）上一次提交，不只是修改message。比如上一次提交时有几个文件没有add以及commit，可以重新进行add再使用commit --amend进行提交，改提交不会增加新的commit，而是在上一次commit的基础上进行修改。
 ##### 3. 怎么修改老旧commit的message
 ##### 4. 怎么把连续的多个commit整理为1个
 ##### 5. 怎么把间隔的几个commit整理为1个
