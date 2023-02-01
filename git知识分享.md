@@ -64,7 +64,8 @@
 		- 创建并切换本地分支 git checkout -b [分支名称] [基于哪里的'Hash值']
 	
 3. 创建第一个仓库并配置local用户
-
+	- git config --local user.name [your_name]
+	- git config --local user.email [your_email]
 
 ​	
 5. 探秘.git目录
@@ -72,7 +73,6 @@
 	- git cat-file -p hashId:查看内容
 
 6. commit、tree和blob三个对象的关系
-		1214124	
 
 7. 分离头指针情况下的注意事项
 8. git的升级方法
