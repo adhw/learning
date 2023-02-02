@@ -54,6 +54,7 @@
 		* 所有分支前四次commit单行图形化展示（注意:不是每个分支）				- git log --all -n4 --oneline --graph	
 		* 注意:使用了--all再指定特定分支，特定分支不会起作用。
 		* 查看分支所有的操作记录（包括已经删除的等）:git reflog
+		* 查看log的详细信息:git log --pretty=fuller	
 	- **branch**
 		- git branch 默认本地所有分支
 		- git branch -r 远端所有分支
@@ -62,10 +63,20 @@
 		- git branch -D [分支名称]删除不需要的分支
 	- **checkout**
 		- 创建并切换本地分支 git checkout -b [分支名称] [基于哪里的'Hash值']
+	- **--allow-empty**
+		- git commit --allow-empty -m'commit message':允许空白提交
 	
 3. 创建第一个仓库并配置local用户
 	- git config --local user.name [your_name]
 	- git config --local user.email [your_email]
+
+4. 显示版本库.git目录的所在位置
+	
+- git rev-parse --git-dir
+	
+5. 显示工作区更目录
+	
+	- git rev-parse --show-toplevel
 
 ​	
 5. 探秘.git目录
@@ -73,8 +84,11 @@
 	- git cat-file -p hashId:查看内容
 
 6. commit、tree和blob三个对象的关系
-
+7. 暂存区
+	
 7. 分离头指针情况下的注意事项
+8. 文件归档
+	- git archive
 8. git的升级方法
 	- windows系统:直接本地打开git,输入git update-git-for-windows
 
@@ -94,4 +108,17 @@
 ##### 7. 怎么比较工作区和暂存区所含文件的差异
 ##### 8. 如何让暂存区恢复成和HEAD的一样
 
-#### 三.
+#### 三.Git和声
+##### 3.1 Git协议与工作协同
+###### 3.1.1.Git支持的协议
+
+| 协议名称     | 语法格式                                          | 说明                                     |
+| ------------ | ------------------------------------------------- | ---------------------------------------- |
+| SSH协议（1） | ssh://[user@]example.com[:port]/path/to/repo.git/ | 可在URL中设置用户名和端口。 默认端口22。 |
+|              |                                                   |                                          |
+|              |                                                   |                                          |
+|              |                                                   |                                          |
+|              |                                                   |                                          |
+|              |                                                   |                                          |
+|              |                                                   |                                          |
+

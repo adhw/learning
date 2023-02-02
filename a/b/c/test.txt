@@ -1,0 +1,3 @@
+hello word
+git暂存区的学习
+
