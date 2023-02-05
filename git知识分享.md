@@ -177,4 +177,132 @@ git reset --soft 47183d8 | 没影响|==新增==原始HEAD节点与reset目标节
         - `git diff` == `git diff HEAD`
         - ![image.png](Screenshots/1.jpg)
 ---
+## <span id="3">三.Git与GitHub的简单同步</span>
+- [ ] <span id="SSH">**配置公私钥 SSH**</span>
+    - 官方步骤: `https://docs.github.com/cn/github/authenticating-to-github/connecting-to-github-with-ssh` 
+    - 生成新 SSH 密钥并添加到 ssh-agent
+    - 新增 SSH 密钥到 GitHub 帐户
+    - 效果: SSH协议配置好后,用户在做push操作的时候就不需要输入用户名和密码啦.它能智能识别你是谁,允许你往对应的Github账户发起变更.
+- [ ] <span id="sync">**简单同步 remote**</span>
+    - 创建自己的项目 `OnePieceDC/git_learning`
+    - 把本地仓库同步到Github
+        - 本地添加远程仓库地址: 
+            - `git remote add github git@github.com:OnePieceDC/git_learning.git`
+        - 查看现有远程地址的url: `git remove -v`
+        - 将本地仓库推送到远端: `git push github --all`
+
+---
+
+## <span id="4">四.Git多人单分支集成协作</span>
+#### 准备工作（码农A with 码农B）
+- 码农B(hangmen)
+    - 新建项目`git_learning`直接用git管理 <a href='#init' style='text-decoration: none;color:pink'>链接</a>
+    - 本地与GitHub进行简单同步 <a href='#sync' style='text-decoration: none;color:pink'>链接</a>
+        - <span style="color:red">注意</span>:**这里添加的远程仓库地址名称为 github. (默认是origin)** 
+    - 在GitHub项目中基于main主干新建分支 `fearure/add_git_commands`
+        - ![image.png](Screenshots/2.jpg) 
+    - 基于远端(**github**)的分支创建本地分支
+        - <span style="color:red">从远程跟踪分支检出本地分支会自动创建所谓的“跟踪分支”,跟踪分支是与远程分支有直接关系的本地分支！</span>
+        - 将服务器上的远端分支拉取到本地 <span id="fetch">**`fetch`**</span>
+            - `git fetch github`
+            - 解释: fetch会将本地的远端分支跟服务器上的远端分支保持一致！(建立或更新远程跟踪分支)
+        - `git checkout -b feature/add_git_commands github/feature/add_git_commands` 
+        - ![image.png](Screenshots/3.jpg)
+- 码农A(OnePieceDC)
+    - 将该项目的主干main通过SSH协议从GIT服务器克隆到本地 <span id="clone">**`clone`**</span>
+        - `git clone git@github.com:OnePieceDC/git_learning.git git_learning_02` ==注==: clone时指定文件夹名字 git_learning_02
+        - `git clone`指令拉取所有数据,并在本地创建对应的本地远程分支
+    - 针对本仓库设置用户名和邮箱 <a href='#config' style='text-decoration: none;color:pink'>链接</a>
+    - 基于远端(**origin**)的分支创建本地分支
+        - 因为我们在本地无法直接在clone下来的远程分支上做变更(建议名字一样!)
+        - `git checkout -b feature/add_git_commands origin/feature/add_git_commands`
+        - <span style="color:red">顺带提一句:很关键</span> 此时本地和远端的这两个分支建立了fast-forword关系！！这时候,它们的HASH值是一样的！
+        - ![image.png](Screenshots/4.jpg)
+- <span id="fast-forword">**fast-forword**</span>
+    - 举个栗子:本地分支往远端分支做push操作,如果远端分支不是这个本地分支的祖先,那它两就不是fast- forward关系。反之异然。
+    - 我们把fast-forward通俗地说：commit和commit之间，子commit有一个箭头指向父commit，用这种方式，版本演变的历史就会形成一幅带方向的图。把commit比做人的话，孙子和爷爷之间，儿子和爸爸之间就是fastforward的关系，而堂兄之间就不是fastforward的关系了。
+    - 官网解释：fast-forward是merge的一种特殊类型，你把A分支合入到B分支的时候，恰好B分支指向的commit是A分支的祖先，在这种情况下，我们无需额外创建一个merge的commit，而只需把B分支指向A分支对应的commit就行。
+
+#### 协同开发
+##### 情况一: AB修改了不同的文件
+- 码农A修改了`readme.md`,并push推送到远端 <span id="push">**push**</span>
+    - `vi readme.md`;`git add -u`;`git commit -m'Add git commands desc'`
+    - `git push [远程主机名] [本地分支名]:[远程分支名]`使用某本地分支并推送它以更新对应的远程分支
+        - `git push origin feature/add_git_commands:feature/add_git_commands` 
+        - 这里缺省的是remote就是origin,在创建本地分支的时候就与远端分支建立了fast-forword的关系. 
+        - ==因而这里可简写==：`git push`
+        - 补充: `git push`不加参数只能上传到从远程仓库clone或者pull下来的分支,如需push在本地创建的分支则需使用`git push origin [分支名]`
+- 码农B修改了index.html
+    -  `vi index.html`;`git add -u`;`git commit -m'Add git commands in index'`
+    -  执行到这一步,你会发现远端feature分支Hash为25g40,而B码农的本地分支feature远端跟踪分支的Hash停留在190a3
+    -  所以执行`git push github`;会报错 ->本地跟远端的分支不是fast-forwards关系！
+        - ![image.png](Screenshots/5.jpg)
+    - 解决方案:
+        - `git fetch github`
+        - `git merge 25g40`==合并指定分支到当前分支== <span id="merge">**merge**</span>
+            - 若当前分支master与指定分支dev是fast-forword的关系 会采取'快进'模式,直接把master指向dev的当前提交
+                - 任何新的功能或bug修复全都新建一个branch来写；
+                - branch写完后,合并到master,然后删掉这个 branch（可使用git origin -d 分支名删除远程仓库的分支）
+            - 若不是fast-forword的关系 则会通过两分支产生一个新的commit(它具有两个父节点)
+            - 分支合并也会有失败的情况,当你的两条分支都修改的相同的文件,这时候Git就无法判断你要保留哪一个修改,就会出现merge冲突(当前是AB修改不同的文件,不存在合并冲突)
+                - 有冲突,需要手动解决掉冲突并重新add、commit（==改动不同文件或同一文件的不同行都不会产生冲突==）
+                - 有冲突,也可以使`git merge --abort`放弃解决冲突，取消merge
+        - `git push`
+        - ==纠正一下: 橘色的commit的hash值是要变的！！制图的时候疏忽了。==
+        - ![image.png](Screenshots/6.jpg)
+        - ![image.png](Screenshots/7.jpg)
+
+##### 情况二: AB修改了相同的文件不同区域
+- 首先执行`git pull`指令,本地与远端进行同步(把远程仓库新的提交拉取到本地) <span id="pull">**pull**</span>
+    - git pull <远程主机名> <远程分支名>:<本地分支名> 等同于 ⬇️
+        - `git fetch <远程主机名>`
+        - `git merge <远程分支名>`
+        -  如果远程分支是与当前分支合并，则冒号后面的部分可以省略。 
+    - <span style="color:red">若报错:拒绝合并无关的历史.</span>
+        - 因为默认情况下，git合并命令拒绝合并没有共同祖先的历史。当两个项目的历史独立地开始时，这个选项可以被用来覆盖这个安全。
+        - 解决: 
+            - `git fetch admin01`
+            - `git merge 364f27 --allow-unrelated-histories`
+- AB修改了相同文件的不同区域,B先push,A后push(其实==情况一和情况二类型是一样的==,这里从==hash值==的变化进行理解)
+- 细品[ahead 1，behind 1]: 本地有一个commit比远端新,远端有一个commit本地没有。
+    码农A(OnePieceDC) | 本地A | 本地远端 | 码农B(suling) | 本地B | 本地远端
+    ---|---|---|---|---|--- 
+    _ | 35dcc99 | 35dcc99 | _ | 35dcc99 | 35dcc99
+    vi index.html | 35dcc99 | 35dcc99 | vi index.html | 35dcc99 | 35dcc99
+    git add -u | 35dcc99 | 35dcc99 | git add -u | 35dcc99 | 35dcc99
+    git commit -m'warehouse' | 84c813a [领先 1] | 35dcc99 | git commit -m'status' | 0e75f71 [领先 1] | 35dcc99
+    _ | 84c813a [领先 1] | 35dcc99 | git push github | 0e75f71 | 0e75f71
+    git fetch | 84c813a [领先 1，落后 1] | 0e75f71 | _ | 0e75f71 | 0e75f71
+    git merge 0e75f71 | 5836caa [领先 2] | 0e75f71 | _ | 0e75f71 | 0e75f71
+    git push | 5836caa | 5836caa | _ | 0e75f71 | 0e75f71
+    git pull | 5836caa | 5836caa | git pull | 5836caa | 5836caa
+
+##### 情况三: AB修改了同文件的同一区域如何处理？
+- 首先执行`git pull`指令
+- AB修改了相同文件(index.html)的相同区域,A先push,B后push。(不同于情况1和2,情况3要解决冲突)
+    - B push时会报错.解决⬇️
+    - `git pull` (fetch成功 会卡在merge那步'因为冲突') `git status`
+    - 解决冲突 vi index.html (里面有两个约束符号 一远端 一本地)
+        - merge的结果需要保留: `git commit -am 'message'`
+        - 恢复merge之前状态: `git merge --abort`
+    - git push github
+
+##### 情况四: 变更了文件名
+
+应用场景: A将某个文件名字进行了变更,并push上去;B不知道,基于原来的文件名继续做开发。
+解决方案: 当B push不成功. pull会自动解决文件名的冲突！(这里,git能感知文件名的变化)
+
+扩展: AB都修改了同一文件的文件名,A比B先push 解决文件名命名冲突即可
+
+---
+
+## <span id="5">五.Git集成使用禁忌</span>
+
+禁止向集成分支执行 git push -f的操作
+
+禁止向集成分支执行变更历史的操作(公共的分支严禁拉到本地做rebase变基操作！)
+
+---
+
+
 
