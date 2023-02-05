@@ -17,7 +17,7 @@
     - `cd repository_name`
     - 进行一系列开发 change the file'变更文件'
     - `git commit -am ['commit to message']` 等同于⬇️
-        - git add [change_file0 change_file2 ...] 等同于 ➡️ `git add u`
+        - git add [change_file0 change_file2 ...] 等同于 ➡️ `git add -u`
             - `git add .`: 将工作空间==新增和被修改==的文件添加到暂存区
             - `git add -u`: 将==已经被git跟踪过的文件==(先前已add的)添加到暂存区(**不包含没有纳入Git管理的新增文件**)
         - git commit -m ['commit to message']
@@ -31,7 +31,7 @@
 - [ ] <span id="log">**log**</span>
     - 当前分支版本演进历史 `git log`
     - 所有分支前四次commit 单行图形化展示 (注意:不是每个分支)
-        - `git log --all -n4 --online --graph`
+        - `git log --all -n4 --oneline --graph`
     - 注意: 使用了--all 再指定特定分支 特定分支不会起作用
     - 查看分支所有的操作记录(包括已经删除的等): `git reflog`
     - `brew install git-gui` ; `gitk --all`
@@ -50,7 +50,7 @@
     - ==简单理解:== 
         - 说某某分支就指的此分支最新的commit
         - 若切换到分支的版本演进历史的某一个旧commit,会处于*分离头指针*的状态,在上面修改后做的commit,在切换回已有分支后,大概率会被Git当作垃圾处理掉！
-- [ ] <span id="tree">**tree、commit、blog**</span>
+- [ ] <span id="tree">**tree、commit、blod**</span>
     - 问:新建的Git仓库,有且仅有一个commit,仅包含/doc/readme,请问有多少个tree,多少个blog？
     - 答:1个commit、2个tree、1个blog
     - 解释: commit本身就是一个大文件夹,里面包含很多小文件夹和文件.
@@ -93,8 +93,7 @@
     - 注意：
         - 在未执行`git add`指令之前,可简单理解暂存区里面存放的是HEAD指针指向的内容.执行后,暂存区里修改对应的变更的部分即可。
         - 也就是说:==刚开始 working tree、index与repository(HEAD)里面的內容都是一致的==
-    - `git status` **未跟踪未提交的变更文件**
-    - `git diff cached` 暂存区与HEAD的比较 **未提交变更文件的内容**
+    - `git diff --cached` 暂存区与HEAD的比较 **未提交变更文件的内容**
     - `git diff` 暂存区与工作区的比较 **未跟踪变更文件的内容**
     - `git diff HEAD HEAD~2`==`git diff HEAD HEAD^^`比较最近和倒数第三次的提交
     - 补充: 
