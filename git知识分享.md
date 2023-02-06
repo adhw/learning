@@ -184,10 +184,10 @@ git reset --soft 47183d8 | 没影响|==新增==原始HEAD节点与reset目标节
     - 新增 SSH 密钥到 GitHub 帐户
     - 效果: SSH协议配置好后,用户在做push操作的时候就不需要输入用户名和密码啦.它能智能识别你是谁,允许你往对应的Github账户发起变更.
 - [ ] <span id="sync">**简单同步 remote**</span>
-    - 创建自己的项目 `OnePieceDC/git_learning`
+    - 创建自己的项目 `adhw/git_learning`
     - 把本地仓库同步到Github
         - 本地添加远程仓库地址: 
-            - `git remote add github git@github.com:OnePieceDC/git_learning.git`
+            - `git remote add github git@github.com:adhw/git_learning.git`
         - 查看现有远程地址的url: `git remove -v`
         - 将本地仓库推送到远端: `git push github --all`
 
@@ -195,7 +195,7 @@ git reset --soft 47183d8 | 没影响|==新增==原始HEAD节点与reset目标节
 
 ## <span id="4">四.Git多人单分支集成协作</span>
 #### 准备工作（码农A with 码农B）
-- 码农B(hangmen)
+- 码农B(huangwen)
     - 新建项目`git_learning`直接用git管理 <a href='#init' style='text-decoration: none;color:pink'>链接</a>
     - 本地与GitHub进行简单同步 <a href='#sync' style='text-decoration: none;color:pink'>链接</a>
         - <span style="color:red">注意</span>:**这里添加的远程仓库地址名称为 github. (默认是origin)** 
@@ -208,9 +208,9 @@ git reset --soft 47183d8 | 没影响|==新增==原始HEAD节点与reset目标节
             - 解释: fetch会将本地的远端分支跟服务器上的远端分支保持一致！(建立或更新远程跟踪分支)
         - `git checkout -b feature/add_git_commands github/feature/add_git_commands` 
         - ![image.png](Screenshots/3.jpg)
-- 码农A(OnePieceDC)
+- 码农A(adhw)
     - 将该项目的主干main通过SSH协议从GIT服务器克隆到本地 <span id="clone">**`clone`**</span>
-        - `git clone git@github.com:OnePieceDC/git_learning.git git_learning_02` ==注==: clone时指定文件夹名字 git_learning_02
+        - `git clone git@github.com:adhw/git_learning.git git_learning_02` ==注==: clone时指定文件夹名字 git_learning_02
         - `git clone`指令拉取所有数据,并在本地创建对应的本地远程分支
     - 针对本仓库设置用户名和邮箱 <a href='#config' style='text-decoration: none;color:pink'>链接</a>
     - 基于远端(**origin**)的分支创建本地分支
@@ -265,7 +265,7 @@ git reset --soft 47183d8 | 没影响|==新增==原始HEAD节点与reset目标节
             - `git merge 364f27 --allow-unrelated-histories`
 - AB修改了相同文件的不同区域,B先push,A后push(其实==情况一和情况二类型是一样的==,这里从==hash值==的变化进行理解)
 - 细品[ahead 1，behind 1]: 本地有一个commit比远端新,远端有一个commit本地没有。
-    码农A(OnePieceDC) | 本地A | 本地远端 | 码农B(suling) | 本地B | 本地远端
+    码农A(adhw) | 本地A | 本地远端 | 码农B(huangwen) | 本地B | 本地远端
     ---|---|---|---|---|--- 
     _ | 35dcc99 | 35dcc99 | _ | 35dcc99 | 35dcc99
     vi index.html | 35dcc99 | 35dcc99 | vi index.html | 35dcc99 | 35dcc99
